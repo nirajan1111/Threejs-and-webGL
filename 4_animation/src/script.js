@@ -1,6 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
-
+import gsap from 'gsap'
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -29,4 +29,33 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
-renderer.render(scene, camera)
+
+// time 
+// let time =Date.now()
+// when the frame rate of the screen is low, the animation will be slow, so we need to use the time to calculate the speed of the animation
+
+//clock
+// const clock =new THREE.Clock()
+
+//gsap 
+gsap.to(mesh.position, { duration: 1, delay: 1, x: 2 })
+
+// animation
+const tick = () => {
+    // const currTime = Date.now()
+    // const deltaTime = currTime - time
+    // time = currTime
+    // doing this results same speed animation in all frame rate 
+    // mesh.rotation.x += 0.001*deltaTime
+
+
+    //  const elapsedTime = clock.getElapsedTime()
+    // mesh.rotation.x = elapsedTime
+
+    // mesh.position.x = Math.cos(elapsedTime)
+    // mesh.position.y = Math.sin(elapsedTime)
+
+    renderer.render(scene, camera)
+    window.requestAnimationFrame(tick)
+}
+tick()
