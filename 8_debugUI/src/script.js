@@ -2,11 +2,31 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from 'gsap'
+import * as dat from 'dat.gui'
+import * as lil from 'lil-gui'
 
 /**
  * Base
  */
 // Canvas
+
+const gui = new dat.GUI({closed:true})
+// const lal = new lil.GUI()
+
+const parameters = {
+    color:0xff0000,
+    spin:()=>{
+        gsap.to(mesh.rotation,{
+            duration:1,
+            y:mesh.rotation.y+Math.PI*2
+        })
+    }
+}
+gui.addColor(parameters,'color').onChange(()=>{
+    material.color.set(parameters.color)
+}
+)
+gui.add(parameters,'spin')
 const canvas = document.querySelector('canvas.webgl')
 
 // Scene
@@ -19,6 +39,26 @@ const geometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 const mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
+gui.hide()
+//Debug
+gui.add(mesh.position, 'y', -3, 3, 0.01)
+gui
+.add(mesh.position, 'x')
+.min(-3)
+.max(3)
+.step(0.01)
+.name('elevation')
+
+
+gui.add(mesh, 'visible')
+
+gui
+.add(mesh.material, 'wireframe')
+
+// gui
+// .addColor(mesh.material, 'color')
+
+
 
 /**
  * Sizes
@@ -28,8 +68,7 @@ const sizes = {
     height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
-{
+window.addEventListener('resize', () => {
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
@@ -69,8 +108,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const clock = new THREE.Clock()
 
-const tick = () =>
-{
+const tick = () => {
     const elapsedTime = clock.getElapsedTime()
 
     // Update controls
