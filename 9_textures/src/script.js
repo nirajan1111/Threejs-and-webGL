@@ -135,7 +135,7 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
-    // Update controls
+    // Update controlsva
     controls.update()
 
     // Render
