@@ -37,6 +37,20 @@ object3.position.x = 2
 
 scene.add(object1, object2, object3)
 
+//Raycaster
+
+// const raycaster = new THREE.Raycaster()
+// const rayOrigin = new THREE.Vector3(-3, 0, 0)
+// const raydirection=new THREE.Vector3(10,0,0)
+// raydirection.normalize()
+// raycaster.set(rayOrigin, raydirection)
+
+// const intersect = raycaster.intersectObject(object2)
+// if(intersect.length){
+//     console.log(intersect)
+// }
+// const intersects = raycaster.intersectObjects([object1, object2, object3])
+// console.log(intersects)
 /**
  * Sizes
  */
@@ -84,13 +98,71 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 /**
  * Animate
  */
+const raycaster= new THREE.Raycaster()
+
+
+// Mouse 
+const mouse = new THREE.Vector2()
+window.addEventListener('click', (event) =>
+{
+    mouse.x = (event.clientX / sizes.width) * 2 - 1
+    mouse.y = - (event.clientY / sizes.height) * 2 + 1
+    console.log(mouse)
+})
+
 const clock = new THREE.Clock()
+let currentIntersect = null
+
 
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
+    // object1.position.y=Math.sin(elapsedTime*0.3)*1.5
+    // object2.position.y=Math.sin(elapsedTime*0.8)*1.5
+    // object3.position.y=Math.sin(elapsedTime*1.4)*1.5
+
+    // const rayOrigin = new THREE.Vector3(-3, 0, 0)
+    // const raydirection=new THREE.Vector3(10,0,0)
+    // raydirection.normalize()
+    // raycaster.set(rayOrigin, raydirection)
+    // const objects=[object1, object2, object3]
+    // const intersects = raycaster.intersectObjects(objects)  
+    // for(const object of objects){
+    //     object.material.color.set('#ff0000')
+    // }
+    // for(const intersect of intersects){
+    //     intersect.object.material.color.set('#0000ff')
+    // }
+
+
+    raycaster.setFromCamera(mouse, camera)
+    const objects=[object1, object2, object3]
+    const intersects = raycaster.intersectObjects(objects)
+
+
+    for(const object of objects){
+        object.material.color.set('#ff0000')
+    }
+    for(const intersect of intersects){
+        intersect.object.material.color.set('#0000ff')
+    }
+
+    if(intersects.length){
+        if(!currentIntersect){
+            console.log('mouse enter')
+        }
+        currentIntersect=intersects[0]
+    }else{
+        if(currentIntersect){
+            console.log('mouse leave')
+        }
+        currentIntersect=null
+     
+    }
     // Update controls
+
+
     controls.update()
 
     // Render
